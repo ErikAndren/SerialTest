@@ -25,6 +25,12 @@ begin
 		Rst_N    => Rst_N
 	);
 	
-	--SerialTest : work.SerialTest
+	SerialTest : work.SerialTest
+	port map (
+		Clk => Clk,
+		Rst_N => Rst_N,
+		--
+		SerialOut => SerialOut
+	);
 	
 end architecture;
