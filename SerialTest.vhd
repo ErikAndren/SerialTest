@@ -15,7 +15,8 @@ entity SerialTest is
 end entity;
 
 architecture fpga of SerialTest is
-	signal Cnt_N, Cnt_D : word(9-1 downto 0);
+	constant bitRateCnt : positive := 50000000 / 9600;
+	signal Cnt_N, Cnt_D : word(bits(bitRateCnt)-1 downto 0);
 	
 	signal Char_D, Char_N : word(4-1 downto 0);
 	signal Str_D, Str_N   : word(8*5-1 downto 0);
@@ -42,20 +43,20 @@ begin
 		Cnt_N <= Cnt_D + 1;
 		Char_N <= Char_D;
 		Str_N <= Str_D;
-		
 	
 		if (Char_D = 0) then
 			-- Send start bit
 			SerialOut <= '1';
 		elsif (Char_D = 9) then
 			-- Send stop bit
-			SerialOut <= '1';
+			SerialOut <= '0';
 		else
 			-- Invert bit
 			SerialOut <= not Str_D(0);
 		end if;
 			
-		if (Cnt_D = 433) then
+		-- 9600
+		if (Cnt_D = 5208) then
 			Cnt_N <= (others => '0');
 			if (Char_D < 9) then
 				Char_N <= Char_D + 1;
