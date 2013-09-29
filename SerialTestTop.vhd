@@ -6,7 +6,7 @@ use work.Types.all;
 
 entity SerialTestTop is 
 	port (
-		AsyncRst : in bit1;
+		AsyncRstN : in bit1;
 		Clk      : in bit1;
 		--
 		SerialOut : out bit1
@@ -17,15 +17,15 @@ architecture fpga of SerialTestTop is
 	signal Rst_N : bit1;
 
 begin
-	RstSync : work.ResetSync
-	port map (
-		AsyncRst => AsyncRst,
-		Clk      => Clk,
-		--
-		Rst_N    => Rst_N
-	);
+        RstSync : entity work.ResetSync
+        port map (
+                AsyncRst => AsyncRstN,
+                Clk      => Clk,
+                --
+                Rst_N    => Rst_N
+        );
 	
-	SerialTest : work.SerialTest
+	SerialTest : entity work.SerialTest
 	port map (
 		Clk => Clk,
 		Rst_N => Rst_N,
