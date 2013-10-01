@@ -53,9 +53,9 @@ begin
 		Cnt_N     <= Cnt_D + 1;
 		Char_N    <= Char_D;
 		Str_N     <= Str_D;
-		SerialOut <= '0';
+		SerialOut <= '1		';
 
-		if (Char_D = 0) then
+		if (Char_D = 0) then	
 			-- Send start bit
 			SerialOut <= '0';
 			IsCtrlBit := true;

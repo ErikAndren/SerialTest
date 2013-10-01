@@ -8,9 +8,9 @@ use work.Types.all;
 entity SerialGen is
 	generic (
 		Bitrate : positive := 9600;
-		DataW   : positive := 8
-		ClkFreq : positive := 50000000;
-	)
+		DataW   : positive := 8;
+		ClkFreq : positive := 50000000
+	);
 	port (
 		Clk       : in bit1;
 		Rst_N     : in bit1;
@@ -29,7 +29,7 @@ architecture fpga of SerialGen is
 	signal Cnt_N, Cnt_D : word(bits(bitRateCnt)-1 downto 0);
 	--
 	signal Char_D, Char_N : word(4-1 downto 0);
-	signal Str_D, Str_N   : word(WData-1 downto 0);
+	signal Str_D, Str_N   : word(DataW-1 downto 0);
 begin
 	BusyAssign : Busy <= '1' when Char_D < PayLoadW else '0';
 
@@ -62,7 +62,7 @@ begin
 			-- Send stop bit
 			SerialOut <= '1';
 			IsCtrlBit := true;
-		elsif (Char_D < PayLoadW-1)
+		elsif (Char_D < PayLoadW-1) then
 			SerialOut <= Str_D(0);
 			IsCtrlBit := false;
 		else
