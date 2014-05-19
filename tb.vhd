@@ -35,6 +35,8 @@ begin
       AsyncRstN => Rst_N,
       Clk       => Clk,
       --
-      SerialOut => SerialOut
+      -- Loop back
+      SerialOut => SerialOut,
+      SerialIn => SerialOut
       );
 end architecture;
