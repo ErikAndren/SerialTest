@@ -2,7 +2,7 @@
 FILES=	SerialGen.vhd \
 	SerialReader.vhd \
 	SerialTest.vhd \
-	SerialTop.vhd
+	SerialTestTop.vhd
 
 WORK_DIR="/tmp/work"
 MODELSIMINI_PATH=/home/erik/Development/FPGA/Lib/modelsim.ini
