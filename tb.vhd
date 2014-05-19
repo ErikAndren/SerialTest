@@ -35,10 +35,9 @@ begin
   begin
     Button0 <= '1';
     while true loop
-      Button0 <= not Button0;
       wait for 1 ms;
+      Button0 <= not Button0;
     end loop;
-
   end process;
 
   DUT : entity work.SerialTestTop
