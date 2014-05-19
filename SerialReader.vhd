@@ -35,25 +35,21 @@ architecture fpga of SerialReader is
   
   signal Str_D, Str_N   : word(DataW-1 downto 0);
 
-  type SerialState is (READING, WAITING_FOR_STOP, WAITING_FOR_START, WAITING_FOR_PARITY_BITS);
+  type SerialState is (READING, WAITING_FOR_STOP, WAITING_FOR_START);
   signal State_N, State_D : SerialState;
   signal SetTimer         : bit1;
   signal QualifyData      : bit1;
 begin
-  BusyAssign : Busy <= '1' when Char_D < PayLoadW else '0';
-
   CntSync : process (Clk, Rst_N)
   begin
     if (Rst_N = '0') then
       Cnt_D   <= (others => '0');
       Str_D   <= (others => '0');
-      Char_D  <= (others => '1');
       State_D <= WAITING_FOR_START;
     elsif rising_edge(Clk) then
       Cnt_D   <= Cnt_N;
       Str_D   <= Str_N;
-      Char_D  <= Char_N;
-      State_N <= State_D;
+      State_D <= State_N;
     end if;
   end process;
 
