@@ -27,7 +27,6 @@ entity SerialReader is
 end entity;
 
 architecture fpga of SerialReader is
-  constant PayloadW     : positive := DataW + 2;
   constant BitRateCnt   : positive := ClkFreq / Bitrate;
   signal Cnt_N, Cnt_D   : word(bits(bitRateCnt)-1 downto 0);
   --
