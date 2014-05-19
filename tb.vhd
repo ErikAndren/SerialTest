@@ -8,9 +8,10 @@ entity tb is
 end entity;
 
 architecture rtl of tb is
-  signal Clk   : bit1;
-  signal Rst_N : bit1;
+  signal Clk       : bit1;
+  signal Rst_N     : bit1;
   signal SerialOut : bit1;
+  signal Button0   : bit1;
 begin
   ClkProc : process
   begin
@@ -30,10 +31,22 @@ begin
     wait;
   end Process;
 
+  ButtonPush : process
+  begin
+    Button0 <= '1';
+    while true loop
+      Button0 <= not Button0;
+      wait for 1 ms;
+    end loop;
+
+  end process;
+
   DUT : entity work.SerialTestTop
     port map (
       AsyncRstN => Rst_N,
       Clk       => Clk,
+      --
+      Button0 => Button0,
       --
       -- Loop back
       SerialOut => SerialOut,
