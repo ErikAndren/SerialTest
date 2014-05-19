@@ -64,6 +64,7 @@ set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
 set_global_assignment -name SYNTH_TIMING_DRIVEN_SYNTHESIS ON
 set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to SerialOut
 set_instance_assignment -name SLEW_RATE 2 -to SerialOut
+set_global_assignment -name VHDL_FILE SerialReader.vhd
 set_global_assignment -name SDC_FILE SerialTestTop.sdc
 set_global_assignment -name VHDL_FILE ../Lib/Types.vhd
 set_global_assignment -name VHDL_FILE ../Lib/ResetSync.vhd
