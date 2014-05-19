@@ -10,15 +10,17 @@ entity SerialTestTop is
     Clk       : in  bit1;
     Button0   : in  bit1;
     --
-    SerialOut : out bit1
+    SerialOut : out bit1;
+    SerialIn  : in  bit1
     );
 end entity;
 
 architecture fpga of SerialTestTop is
-  signal Rst_N : bit1;
-  signal We    : bit1;
-  signal WData : word(8-1 downto 0);
-  
+  signal Rst_N    : bit1;
+  signal We       : bit1;
+  signal WData    : word(8-1 downto 0);
+  signal RData    : word(8-1 downto 0);
+  signal RDataVal : bit1;
 begin
   RstSync : entity work.ResetSync
     port map (
@@ -31,7 +33,7 @@ begin
   We    <= '1' when Button0 = '0' else '0';
   WData <= conv_word(72, ByteW);
 
-  SerialTest : entity work.SerialGen
+  SerialWrite : entity work.SerialGen
     port map (
       Clk       => Clk,
       Rst_N     => Rst_N,
@@ -41,4 +43,16 @@ begin
       --
       SerialOut => SerialOut
       );
+
+  SerialRead : entity work.SerialReader
+    port map (
+      Clk        => Clk,
+      Rst_N      => Rst_N,
+      --
+      SerialIn   => SerialIn,
+      --
+      IncByte    => RData,
+      IncByteVal => RDataVal
+      );
+
 end architecture;
