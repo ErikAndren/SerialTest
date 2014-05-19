@@ -42,13 +42,15 @@ begin
   CntSync : process (Clk, Rst_N)
   begin
     if (Rst_N = '0') then
-      Cnt_D   <= (others => '0');
-      Str_D   <= (others => '0');
-      State_D <= WAITING_FOR_START;
+      Cnt_D    <= (others => '0');
+      Str_D    <= (others => '0');
+      BitCnt_D <= (others => '0');
+      State_D  <= WAITING_FOR_START;
     elsif rising_edge(Clk) then
-      Cnt_D   <= Cnt_N;
-      Str_D   <= Str_N;
-      State_D <= State_N;
+      Cnt_D    <= Cnt_N;
+      Str_D    <= Str_N;
+      State_D  <= State_N;
+      BitCnt_D <= BitCnt_N;
     end if;
   end process;
 
@@ -64,6 +66,7 @@ begin
       when WAITING_FOR_START =>
         if SerialIn = '1' then
           State_N <= READING;
+          BitCnt_N <= conv_word(DataW + ParityBits, BitCnt_N'length);
           SetTimer <= '1';
         end if;
 
