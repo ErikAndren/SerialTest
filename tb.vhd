@@ -33,9 +33,9 @@ begin
 
   ButtonPush : process
   begin
-    Button0 <= '1';
+    Button0 <= '0';
     while true loop
-      wait for 1 ms;
+      wait for 100 ms;
       Button0 <= not Button0;
     end loop;
   end process;
