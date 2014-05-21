@@ -24,7 +24,9 @@ entity SerialGen is
 end entity;
 
 architecture fpga of SerialGen is
-  constant PayloadW     : positive := DataW + 2;
+  -- Data plus start and stop bits
+  constant Payload      : positive := DataW + 2;
+  constant PayloadW     : positive := bits(DataW + 2);
   constant BitRateCnt   : positive := ClkFreq / Bitrate;
   signal Cnt_N, Cnt_D   : word(bits(bitRateCnt)-1 downto 0);
   --
@@ -53,22 +55,24 @@ begin
     Cnt_N     <= Cnt_D + 1;
     Char_N    <= Char_D;
     Str_N     <= Str_D;
-    SerialOut <= '1';
+    SerialOut <= '0';
 
     if (Char_D = 0) then
       -- Send start bit
-      SerialOut <= '0';
-      IsCtrlBit := true;
-    elsif (Char_D = PayloadW-1) then
-      -- Send stop bit
       SerialOut <= '1';
       IsCtrlBit := true;
-    elsif (Char_D < PayLoadW-1) then
+    elsif (conv_integer(Char_D) = Payload-1) then
+      -- Send stop bit
+      SerialOut <= '0';
+      IsCtrlBit := true;
+    elsif (conv_integer(Char_D) < PayLoad-1) then
+      -- Send LSB first
       SerialOut <= Str_D(0);
       IsCtrlBit := false;
     else
       if (We = '1') then
-        Str_N  <= WData;
+        -- Invert symbols
+        Str_N  <= not WData;
         Char_N <= (others => '0');
         Cnt_N  <= (others => '0');
       end if;
@@ -81,7 +85,7 @@ begin
         Str_N <= '0' & Str_D(Str_D'high downto 1);
       end if;
 
-      if (Char_D < PayloadW-1) then
+      if (Char_D < Payload-1) then
         Char_N <= Char_D + 1;
       else
         if (We = '1') then
