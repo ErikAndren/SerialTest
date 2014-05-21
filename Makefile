@@ -1,7 +1,6 @@
 
 FILES=	SerialGen.vhd \
 	SerialReader.vhd \
-	SerialTest.vhd \
 	SerialTestTop.vhd \
 	tb.vhd
 
