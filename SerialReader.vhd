@@ -27,8 +27,9 @@ entity SerialReader is
 end entity;
 
 architecture fpga of SerialReader is
-  constant BitRateCnt   : positive := ClkFreq / Bitrate;
-  signal Cnt_N, Cnt_D   : word(bits(bitRateCnt)-1 downto 0);
+  constant BitRateCnt       : positive := ClkFreq / Bitrate;
+  signal Cnt_N, Cnt_D       : word(bits(bitRateCnt)-1 downto 0);
+  signal SampleLine         : bit1;
   --
   signal BitCnt_N, BitCnt_D : word(bits(DataW + ParityBits)-1 downto 0);
   
@@ -54,7 +55,7 @@ begin
     end if;
   end process;
 
-  AsyncProc : process (State_D, SerialIn, Str_D, BitCnt_D, Cnt_D)
+  AsyncProc : process (State_D, SerialIn, Str_D, BitCnt_D, SampleLine)
   begin
     State_N  <= State_D;
     SetTimer <= '0';
@@ -71,7 +72,7 @@ begin
         end if;
 
       when READING =>
-        if Cnt_D = 0 then
+        if SampleLine = '1' then
           BitCnt_N <= BitCnt_D - 1;
           Str_N <= SerialIn & Str_D(Str_N'length-1 downto 1);
           SetTimer <= '1';
@@ -82,7 +83,7 @@ begin
         end if;
         
       when WAITING_FOR_STOP =>
-        if Cnt_D = 0 then
+        if SampleLine = '1' then
           if SerialIn = '0' then
             QualifyData <= '1';
             SetTimer <= '1';
@@ -103,11 +104,13 @@ begin
       Cnt_N <= conv_word(BitRateCnt, Cnt_N'length);
     end if;
   end process;
+  SampleLine <= '1' when Cnt_D = 0 else '0';
 
   -- FIXME: Add support for parity
   QualifyDataProc : process (QualifyData, Str_D)
   begin
-    IncByte    <= Str_D;
+    -- All serial symbols are inverted
+    IncByte    <= not Str_D;
     IncByteVal <= '0';
 
     if QualifyData = '1' then
