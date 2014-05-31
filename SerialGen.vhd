@@ -30,50 +30,49 @@ architecture fpga of SerialGen is
   constant BitRateCnt   : positive := ClkFreq / Bitrate;
   signal Cnt_N, Cnt_D   : word(bits(bitRateCnt)-1 downto 0);
   --
-  signal Char_D, Char_N : word(4-1 downto 0);
+  signal CharCnt_D, CharCnt_N : word(4-1 downto 0);
   signal Str_D, Str_N   : word(DataW-1 downto 0);
 begin
-  BusyAssign : Busy <= '1' when Char_D < PayLoadW else '0';
+  BusyAssign : Busy <= '1' when CharCnt_D < PayLoadW else '0';
 
   CntSync : process (Clk, Rst_N)
   begin
     if (Rst_N = '0') then
       Cnt_D  <= (others => '0');
       Str_D  <= (others => '0');
-      Char_D <= (others => '1');
+      CharCnt_D <= (others => '1');
     elsif rising_edge(Clk) then
       Cnt_D  <= Cnt_N;
       Str_D  <= Str_N;
-      Char_D <= Char_N;
+      CharCnt_D <= CharCnt_N;
     end if;
   end process;
 
-  CntAsync : process (Cnt_D, Char_D, Str_D, WData, We)
+  CntAsync : process (Cnt_D, CharCnt_D, Str_D, WData, We)
     variable IsCtrlBit : boolean;
   begin
     IsCtrlBit := false;
     Cnt_N     <= Cnt_D + 1;
-    Char_N    <= Char_D;
+    CharCnt_N    <= CharCnt_D;
     Str_N     <= Str_D;
     SerialOut <= '1';
 
-    if (Char_D = 0) then
+    if (CharCnt_D = 0) then
       -- Send start bit
       SerialOut <= '0';
       IsCtrlBit := true;
-    elsif (conv_integer(Char_D) = Payload-1) then
+    elsif (conv_integer(CharCnt_D) = Payload-1) then
       -- Send stop bit
       SerialOut <= '1';
       IsCtrlBit := true;
-    elsif (conv_integer(Char_D) < PayLoad-1) then
+    elsif (conv_integer(CharCnt_D) < PayLoad-1) then
       -- Send LSB first
       SerialOut <= Str_D(0);
       IsCtrlBit := false;
     else
       if (We = '1') then
-        -- Invert symbols
         Str_N  <= WData;
-        Char_N <= (others => '0');
+        CharCnt_N <= (others => '0');
         Cnt_N  <= (others => '0');
       end if;
     end if;
@@ -85,14 +84,14 @@ begin
         Str_N <= '0' & Str_D(Str_D'high downto 1);
       end if;
 
-      if (Char_D < Payload-1) then
-        Char_N <= Char_D + 1;
+      if (CharCnt_D < Payload-1) then
+        CharCnt_N <= CharCnt_D + 1;
       else
         if (We = '1') then
           Str_N  <= WData;
-          Char_N <= (others => '0');
+          CharCnt_N <= (others => '0');
         else
-          Char_N <= (others => '1');
+          CharCnt_N <= (others => '1');
         end if;
       end if;
     end if;
