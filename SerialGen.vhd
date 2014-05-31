@@ -55,15 +55,15 @@ begin
     Cnt_N     <= Cnt_D + 1;
     Char_N    <= Char_D;
     Str_N     <= Str_D;
-    SerialOut <= '0';
+    SerialOut <= '1';
 
     if (Char_D = 0) then
       -- Send start bit
-      SerialOut <= '1';
+      SerialOut <= '0';
       IsCtrlBit := true;
     elsif (conv_integer(Char_D) = Payload-1) then
       -- Send stop bit
-      SerialOut <= '0';
+      SerialOut <= '1';
       IsCtrlBit := true;
     elsif (conv_integer(Char_D) < PayLoad-1) then
       -- Send LSB first
@@ -72,7 +72,7 @@ begin
     else
       if (We = '1') then
         -- Invert symbols
-        Str_N  <= not WData;
+        Str_N  <= WData;
         Char_N <= (others => '0');
         Cnt_N  <= (others => '0');
       end if;
