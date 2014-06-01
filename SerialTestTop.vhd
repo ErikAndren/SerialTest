@@ -68,15 +68,15 @@ begin
       ButtonPulse => Btn0Pulse
       );
 
-  WData  <= conv_word(72, ByteW);
+--  WData  <= conv_word(72, ByteW);
 
   SerialWrite : entity work.SerialGen
     port map (
       Clk       => Clk,
       Rst_N     => Rst_N,
       --
-      We        => We,
-      WData     => Wdata,
+      We        => RDataVal,
+      WData     => RData,
       --
       SerialOut => SerialOut
       );
