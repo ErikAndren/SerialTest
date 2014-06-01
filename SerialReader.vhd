@@ -67,10 +67,10 @@ begin
     case State_D is
       when WAITING_FOR_START =>
         if SerialIn = '0' then
-          State_N <= DELAY;
+          State_N   <= DELAY;
           CharCnt_N <= (others => '0');
           -- Wait a bit to not sample the beginning of an edge
-          setDelay <= '1';
+          SetDelay  <= '1';
         end if;
 
       when DELAY =>
@@ -101,7 +101,7 @@ begin
     end case;
   end process;
 
-  SetTime : process (SetTimer, setDelay, Cnt_D)
+  SetTime : process (SetTimer, SetDelay, Cnt_D)
   begin
     Cnt_N <= Cnt_D - 1;
     if Cnt_D = 0 then
@@ -119,9 +119,8 @@ begin
   -- FIXME: Add support for parity
   QualifyDataProc : process (QualifyData, Str_D)
   begin
-    -- All serial symbols are inverted
     IncByte    <= Str_D;
-    Incbyteval <= '0';
+    IncByteVal <= '0';
 
     if QualifyData = '1' then
       IncByteVal <= '1';
