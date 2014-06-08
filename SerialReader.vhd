@@ -32,14 +32,15 @@ architecture fpga of SerialReader is
   signal SampleLine         : bit1;
   --
   signal CharCnt_N, CharCnt_D : word(DataW-1 downto 0);
-  
+  --
   signal Str_D, Str_N   : word(DataW-1 downto 0);
-
+  --
   type SerialState is (READING, DELAY, WAITING_FOR_STOP, WAITING_FOR_START);
   signal State_N, State_D   : SerialState;
   signal SetTimer, setDelay : bit1;
   signal QualifyData        : bit1;
 begin
+
   CntSync : process (Clk, Rst_N)
   begin
     if (Rst_N = '0') then
@@ -59,16 +60,17 @@ begin
   begin
     State_N     <= State_D;
     SetTimer    <= '0';
+    SetDelay    <= '0';
     Str_N       <= Str_D;
     CharCnt_N   <= CharCnt_D;
     QualifyData <= '0';
-    setDelay    <= '0';
-    
+
     case State_D is
       when WAITING_FOR_START =>
         if SerialIn = '0' then
           State_N   <= DELAY;
           CharCnt_N <= (others => '0');
+          Str_N     <= (others => '0');
           -- Wait a bit to not sample the beginning of an edge
           SetDelay  <= '1';
         end if;
@@ -85,18 +87,15 @@ begin
           Str_N     <= SerialIn & Str_D(Str_N'length-1 downto 1);
           SetTimer  <= '1';
 
-          if conv_integer(CharCnt_D) = DataW-1 then
-            State_N   <= WAITING_FOR_STOP;
+          if conv_integer(CharCnt_D) + 1 = DataW then
+            State_N <= WAITING_FOR_STOP;
           end if;
         end if;
-        
+
       when WAITING_FOR_STOP =>
         if SampleLine = '1' then
-          if SerialIn = '1' then
-            QualifyData <= '1';
-          end if;
-          State_N <= WAITING_FOR_START;
-          SetTimer <= '1';
+          State_N     <= WAITING_FOR_START;
+          QualifyData <= '1';
         end if;
     end case;
   end process;
@@ -127,4 +126,3 @@ begin
     end if;
   end process;
 end architecture;
-
