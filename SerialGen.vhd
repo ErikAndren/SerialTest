@@ -80,11 +80,10 @@ begin
       CharCnt_N <= CharCnt_D + 1;
     end if;
 
-    if (We = '1') then
+    if (We = '1') and (CharCnt_D >= PayLoad) then
       Str_N     <= WData;
       CharCnt_N <= (others => '0');
       Cnt_N     <= (others => '0');
-    end if;    
+    end if;
   end process;
 end architecture;
-
