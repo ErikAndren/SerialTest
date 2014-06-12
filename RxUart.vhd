@@ -52,7 +52,7 @@ begin
         when "011" =>
           Divisor <= 47;
         when "100" =>
-          Divisor <= 322;
+          Divisor <= 340;
         when "101" =>
           Divisor <= 191;
         when "110" =>
