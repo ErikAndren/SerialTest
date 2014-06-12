@@ -44,11 +44,11 @@ begin
     elsif rising_edge(Clk) then
       case Baud is
         when "000" =>
-          Divisor <= 7;
+          Divisor <= 25;
         when "001" =>
-          Divisor <= 15;
+          Divisor <= 53;
         when "010" =>
-          Divisor <= 23;
+          Divisor <= 81;
         when "011" =>
           Divisor <= 47;
         when "100" =>
