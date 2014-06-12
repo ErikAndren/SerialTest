@@ -50,15 +50,15 @@ begin
         when "010" =>
           Divisor <= 81;
         when "011" =>
-          Divisor <= 47;
+          Divisor <= 165;
         when "100" =>
           Divisor <= 340;
         when "101" =>
-          Divisor <= 191;
+          Divisor <= 670;
         when "110" =>
-          Divisor <= 383;
+          Divisor <= 1342;
         when "111" =>
-          Divisor <= 767;
+          Divisor <= 2688;
       end case;
     end if;
   end process;
@@ -103,7 +103,6 @@ begin
   begin
     if RstN = '0' then
       Rx_Reg   <= (others => '0');
-      Dout     <= (others => '0');
       RxBitCnt <= 0;
       RxFsm    <= Idle;
       RxRdyi   <= '0';
@@ -150,7 +149,6 @@ begin
 
         when Stop_Rx =>
           if TopRx = '1' then
-            Dout <= Rx_Reg;
             RxRdyi <= '1';
             RxFSM <= Idle;
           end if;
@@ -162,5 +160,7 @@ begin
         end case;
     end if;
   end process;
+  Dout  <= Rx_Reg;
   RxRdy <= RxRdyi;
+
 end architecture;
