@@ -36,6 +36,15 @@ architecture rtl of SerialRx is
   signal RxFsm : RxFsmType;
   signal RxRdyi : bit1;
 
+  constant Baud_115200 : word(3-1 downto 0) := "000";
+  constant Baud_57600  : word(3-1 downto 0) := "001";
+  constant Baud_38400  : word(3-1 downto 0) := "010";
+  constant Baud_19200  : word(3-1 downto 0) := "011";
+  constant Baud_9600   : word(3-1 downto 0) := "100";
+  constant Baud_4800   : word(3-1 downto 0) := "101";
+  constant Baud_2400   : word(3-1 downto 0) := "110";
+  constant Baud_1200   : word(3-1 downto 0) := "111";
+  
 begin
   BaudRateSel : process (RstN, Clk)
   begin
@@ -43,21 +52,21 @@ begin
       Divisor <= 0;
     elsif rising_edge(Clk) then
       case Baud is
-        when "000" =>
+        when Baud_115200 =>
           Divisor <= 25;
-        when "001" =>
+        when Baud_57600 =>
           Divisor <= 53;
-        when "010" =>
+        when Baud_38400 =>
           Divisor <= 81;
-        when "011" =>
+        when Baud_19200 =>
           Divisor <= 165;
-        when "100" =>
+        when Baud_9600 =>
           Divisor <= 340;
-        when "101" =>
+        when Baud_4800 =>
           Divisor <= 670;
-        when "110" =>
+        when Baud_2400 =>
           Divisor <= 1342;
-        when "111" =>
+        when Baud_1200 =>
           Divisor <= 2688;
       end case;
     end if;
