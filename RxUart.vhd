@@ -68,6 +68,8 @@ begin
           Divisor <= 1342;
         when Baud_1200 =>
           Divisor <= 2688;
+        when others =>
+          Divisor <= 25;
       end case;
     end if;
   end process;
