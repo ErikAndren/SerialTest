@@ -33,7 +33,7 @@ architecture fpga of SerialTestTop is
   signal Baud                               : word(3-1 downto 0);
   signal RegAccess                          : RegAccessRec;
   signal Led                                : word(2-1 downto 0);
-  --
+  signal Busy                               : bit1;
 begin
   Led0 <= Led(0);
   Led1 <= Led(1);
@@ -100,7 +100,8 @@ begin
       We        => DataFromParserVal,
       WData     => DataFromParser,
       --
-      SerialOut => SerialOut
+      SerialOut => SerialOut,
+      Busy      => Busy
       );
 
   SerialRead : entity work.SerialRx
@@ -127,7 +128,7 @@ begin
       IncSerChar     => DataToParser,
       IncSerCharVal  => DataToParserVal,
       --
-      OutSerCharBusy => '0',
+      OutSerCharBusy => Busy,
       OutSerChar     => DataFromParser,
       OutSerCharVal  => DataFromParserVal,
       --
