@@ -71,6 +71,8 @@ begin
           Divisor <= ClkFreq / 2400;
         when Baud_1200 =>
           Divisor <= ClkFreq / 1200;
+        when others =>
+          Divisor <= ClkFreq / 115200;
       end case;
     end if;
   end process;
