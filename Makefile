@@ -1,6 +1,8 @@
 
-FILES=	SerialGen.vhd \
-	SerialReader.vhd \
+FILES=	SerialPack.vhd \
+	SerialCmdParser.vhd \
+	RxUart.vhd \
+	SerialGen.vhd \
 	SerialTestTop.vhd \
 	tb.vhd
 
