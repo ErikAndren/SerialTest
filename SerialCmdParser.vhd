@@ -30,27 +30,27 @@ end entity;
 
 architecture rtl of SerialCmdParser is
   --
-  constant NbrArgs                : positive           := 3;
-  constant OpLen                  : positive           := 1;
+  constant NbrArgs                : positive := 3;
+  constant OpLen                  : positive := 1;
   -- 1111111111
   -- 9876543210987654321 0
   -- O AAAAAAAA DDDDDDDD\n
   -- 1 + 3 + 8 + 8 = 20
-  constant BufLen                 : positive           := OpLen + NbrArgs + AddrLen + DataLen;
+  constant BufLen                 : positive := OpLen + NbrArgs + AddrLen + DataLen;
   -- 5
-  constant BufLenW                : positive           := bits(BufLen);
+  constant BufLenW                : positive := bits(BufLen);
   -- 19
-  constant OpStartOffs            : natural           := BufLen-1;
+  constant OpStartOffs            : natural  := BufLen-1;
   -- 19
-  constant OpEndOffs              : natural           := OpStartOffs;
+  constant OpEndOffs              : natural  := OpStartOffs;
   -- 19 - 2 = 17
-  constant AddrStartOffs          : natural           := OpEndOffs - 2;
+  constant AddrStartOffs          : natural  := OpEndOffs - 2;
   -- 17 - 7 = 10
-  constant AddrEndOffs            : natural           := AddrStartOffs - (AddrLen-1);
+  constant AddrEndOffs            : natural  := AddrStartOffs - (AddrLen-1);
   -- 10 - 2 = 8
-  constant DataStartOffs          : natural           := AddrEndOffs - 2;
+  constant DataStartOffs          : natural  := AddrEndOffs - 2;
   -- 8 - 1 = 1
-  constant DataEndOffs            : natural           := DataStartOffs - (DataLen-1);
+  constant DataEndOffs            : natural  := DataStartOffs - (DataLen-1);
   --
   signal IncBuf_N, IncBuf_D       : word(BufLen*Byte-1 downto 0);
   signal OutBuf_N, OutBuf_D       : word(BufLen*Byte-1 downto 0);
