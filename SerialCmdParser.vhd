@@ -139,7 +139,7 @@ begin
     end if;
   end process;
   
-  IncCharAddAsync : process (IncSerChar, IncSerCharVal, IncBuf_D, CurBufLen_D)
+   IncCharAddAsync : process (IncSerChar, IncSerCharVal, IncBuf_D, CurBufLen_D)
     variable IncBuf_T : word(IncBuf_D'range);
   begin
     IncBuf_T    := IncBuf_D;
@@ -239,7 +239,7 @@ begin
       OutBuf_N    <= OutBuf;
     end if;
 
-    if OutBufVal_D = '0' and OutSerCharBusy = '0' then
+    if OutBufVal_D = '1' and OutSerCharBusy = '0' then
       OutSerCharVal <= '1';
       OutBufLen_N <= OutBufLen_D - 1;
       if OutBufLen_D - 1 = 0 then
