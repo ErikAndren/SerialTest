@@ -8,10 +8,14 @@ entity tb is
 end entity;
 
 architecture rtl of tb is
-  signal Clk       : bit1;
-  signal Rst_N     : bit1;
-  signal SerialOut : bit1;
-  signal Button0   : bit1;
+  signal Clk         : bit1;
+  signal Rst_N       : bit1;
+  signal SerialOut   : bit1;
+  signal Button0     : bit1;
+  signal Baud        : word(3-1 downto 0);
+  signal TestData    : word(8-1 downto 0);
+  signal TestDataVal : bit1;
+  signal SerialIn    : bit1;
 begin
   ClkProc : process
   begin
@@ -48,7 +52,26 @@ begin
       Button0 => Button0,
       --
       -- Loop back
-      SerialOut => SerialOut,
-      SerialIn => SerialOut
+      SerialOut => open,
+      SerialIn => SerialIn
       );
+
+  Baud <= "010";
+
+  TestData <= x"30";
+  TestDataVal <= '1';
+  
+  TbSerialGen : entity work.SerialGen
+    port map (
+      Clk       => Clk,
+      Rst_N     => Rst_N,
+      --
+      Baud      => Baud,
+      --
+      We        => TestDataVal,
+      WData     => TestData,
+      --
+      SerialOut => SerialIn
+      );
+  
 end architecture;
