@@ -10,7 +10,7 @@ package SerialPack is
   constant Nibble             : positive              := 4;
 
   constant NewLine                : word(8-1 downto 0) := x"0A";
-  constant WriteCmd               : word(8-1 downto 0) := x"56";
+  constant WriteCmd               : word(8-1 downto 0) := x"57";
   constant ReadCmd                : word(8-1 downto 0) := x"52";
   constant SpaceChar              : word(8-1 downto 0) := x"20";
   
