@@ -29,10 +29,6 @@ entity SerialCmdParser is
 end entity;
 
 architecture rtl of SerialCmdParser is
-  constant NewLine                : word(8-1 downto 0) := x"0A";
-  constant WriteCmd               : word(8-1 downto 0) := x"56";
-  constant ReadCmd                : word(8-1 downto 0) := x"52";
-  constant SpaceChar              : word(8-1 downto 0) := x"20";
   --
   constant NbrArgs                : positive           := 3;
   constant OpLen                  : positive           := 1;
