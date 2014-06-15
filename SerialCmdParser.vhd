@@ -215,6 +215,7 @@ begin
       -- Build the output string
       -- Fill output string with spaces
       OutBuf := ReplicateWord(SpaceChar, BufLen);
+      OutBuf(ByteW-1 downto 0) := NewLine;
 
       if RegAccessIn.Cmd = REG_READ then
         OutBuf((OpStartOffs+1)*Byte-1 downto OpEndOffs*Byte) := ReadCmd;
@@ -225,8 +226,8 @@ begin
       -- Must add d'48 to all numbers to align to ascii, hex numbers need
       -- special treatment.
       -- Each nibble of the data and address must be converted.
-      OutBuf((AddrStartOffs+1)*Byte-1 downto AddrEndOffs*Byte) := HexToAsc(2-1, 0, RegAccessIn.Addr);
-      OutBuf((DataStartOffs+1)*Byte-1 downto DataEndOffs*Byte) := HexToAsc(2-1, 0, RegAccessIn.Data);
+      OutBuf((AddrStartOffs+1)*Byte-1 downto AddrEndOffs*Byte) := HexToAsc(RegAccessIn.Addr'length/Byte-1, 0, RegAccessIn.Addr);
+      OutBuf((DataStartOffs+1)*Byte-1 downto DataEndOffs*Byte) := HexToAsc(RegAccessIn.Data'length/Byte-1, 0, RegAccessIn.Data);
 
       OutBuf(Byte-1 downto 0) := NewLine;
 
