@@ -12,14 +12,13 @@ end entity;
 architecture rtl of tb is
   signal Clk         : bit1;
   signal Rst_N       : bit1;
-  signal SerialOut   : bit1;
   signal Button0     : bit1;
   signal Baud        : word(3-1 downto 0);
   signal TestData    : word(8-1 downto 0);
   signal TestDataVal : bit1;
   signal SerialIn    : bit1;
+  signal SerialOut   : bit1;
   signal Busy        : bit1;
-
   signal DataPtr_N, DataPtr_D : word(4-1 downto 0); 
   
 begin
@@ -55,11 +54,11 @@ begin
       AsyncRstN => Rst_N,
       Clk       => Clk,
       --
-      Button0 => Button0,
+      Button0   => Button0,
       --
       -- Loop back
-      SerialOut => open,
-      SerialIn => SerialIn
+      SerialOut => SerialOut,
+      SerialIn  => SerialIn
       );
 
   Baud <= "010";
@@ -138,5 +137,22 @@ begin
       --
       SerialOut => SerialIn,
       Busy      => Busy
-      );  
+      );
+
+  TbSerialRead : entity work.SerialRx
+    generic map (
+      DataW => 8
+      )
+    port map (
+      Clk   => Clk,
+      RstN  => Rst_N,
+      --
+      Rx    => SerialOut,
+      --
+      Baud  => Baud,
+      --
+      DOut  => open,
+      RxRdy => open
+      );
+  
 end architecture;
