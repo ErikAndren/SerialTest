@@ -19,7 +19,7 @@ architecture rtl of tb is
   signal SerialIn    : bit1;
   signal SerialOut   : bit1;
   signal Busy        : bit1;
-  signal DataPtr_N, DataPtr_D : word(4-1 downto 0); 
+  signal DataPtr_N, DataPtr_D : word(5-1 downto 0); 
   
 begin
   ClkProc : process
@@ -63,7 +63,6 @@ begin
 
   Baud <= "010";
 
-
   WriteProcSync : process (Clk, Rst_N)
   begin
     if Rst_N = '0' then
@@ -79,42 +78,66 @@ begin
    TestDataVal <= '1';
 
    case DataPtr_D is
-     when "0000" =>
+     when "00000" =>
        TestData <= W;
 
-     when "0001" =>
+     when "00001" =>
        TestData <= Space;
 
-     when "0010" =>
+     when "00010" =>
        TestData <= x"30";
 
-     when "0011" =>
+     when "00011" =>
        TestData <= x"31";
 
-     when "0100" =>
+     when "00100" =>
        TestData <= x"32";
        
-     when "0101" =>
+     when "00101" =>
        TestData <= x"33";
 
-     when "0110" =>
-       TestData <= Space;       
-
-     when "0111" =>
+     when "00111" =>
        TestData <= x"34";
 
-     when "1000" =>
+     when "01000" =>
        TestData <= x"35";
 
-     when "1001" =>
+     when "01001" =>
        TestData <= x"36";
 
-     when "1010" =>
+     when "01010" =>
        TestData <= x"37";
        
-     when "1011" =>
-       TestData <= NewLine;
+     when "01011" =>
+       TestData <= Space;       
+
+     when "01100" =>
+       TestData <= x"38";
+
+     when "01101" =>
+       TestData <= x"39";
+
+     when "01110" =>
+       TestData <= x"40";
+
+     when "01111" =>
+       TestData <= x"41";
+
+     when "10000" =>
+       TestData <= x"42";
        
+     when "10001" =>
+       TestData <= x"43";
+
+     when "10010" =>
+       TestData <= x"44";
+
+     when "10011" =>
+       TestData <= x"45";
+       
+     when "10100" =>
+       TestData <= NewLine;
+
      when others =>
        TestData    <= x"FF";
        TestDataVal <= '0';
