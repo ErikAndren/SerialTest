@@ -74,7 +74,7 @@ begin
 
   WriteProcAsync : process (DataPtr_D, Busy)
   begin
-   DataPtr_N <= DataPtr_D;
+   DataPtr_N   <= DataPtr_D;
    TestDataVal <= '1';
 
    case DataPtr_D is
@@ -118,22 +118,22 @@ begin
        TestData <= x"39";
 
      when "01101" =>
-       TestData <= x"3A";
+       TestData <= x"41";
 
      when "01110" =>
-       TestData <= x"3B";
+       TestData <= x"42";
 
      when "01111" =>
-       TestData <= x"3C";
+       TestData <= x"43";
 
      when "10000" =>
-       TestData <= x"3D";
+       TestData <= x"44";
        
      when "10001" =>
-       TestData <= x"3E";
+       TestData <= x"45";
 
      when "10010" =>
-       TestData <= x"3F";
+       TestData <= x"46";
 
      when "10011" =>
        TestData <= NewLine;
