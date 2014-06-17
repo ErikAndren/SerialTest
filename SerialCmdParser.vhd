@@ -89,9 +89,7 @@ architecture rtl of SerialCmdParser is
 
   function HexToAsc(StartOffs : natural; EndOffs : natural; Inc : word) return word is
     variable j                : integer;
-    variable ByteChunk        : word(Byte-1 downto 0);
-    variable UpperNibbleChunk : word(Nibble-1 downto 0);
-    variable LowerNibbleChunk : word(Nibble-1 downto 0);
+    variable NibbleChunk : word(Nibble-1 downto 0);
     variable RetVal           : word((Inc'length/Nibble)*Byte-1 downto 0);
     variable Inc_norm         : word(Inc'length-1 downto 0);
   begin
@@ -101,24 +99,15 @@ architecture rtl of SerialCmdParser is
     -- Convert address from binary to ascii representation
     -- Each nibble gets its own charachter
     for i in StartOffs downto EndOffs loop
-      j                := i - EndOffs;
-      ByteChunk        := Inc_norm((j+1)*Byte-1 downto j*Byte);
-      --
-      LowerNibbleChunk := ExtractSlice(ByteChunk, Nibble, 0);
-      UpperNibbleChunk := ExtractSlice(ByteChunk, Nibble, 1);
+      j           := i - EndOffs;
+      NibbleChunk := Inc_norm((j+1)*Nibble-1 downto j*Nibble);
       
       -- Check if hex
-      if LowerNibbleChunk < 10 then
-        RetVal((i+1)*Byte-1 downto i*Byte) := LowerNibbleChunk + x"30";        
+      if NibbleChunk < 10 then
+        RetVal((i+1)*Byte-1 downto i*Byte) := NibbleChunk + x"30";        
       else
-        RetVal((i+1)*Byte-1 downto i*Byte) := LowerNibbleChunk + x"41";
+        RetVal((i+1)*Byte-1 downto i*Byte) := NibbleChunk + x"41";
       end if;        
-
-      if UpperNibbleChunk < 10 then
-        RetVal((i+1)*Byte-1 downto i*Byte) := UpperNibbleChunk + x"30";
-      else
-        RetVal((i+1)*Byte-1 downto i*Byte) := UpperNibbleChunk + x"41";
-      end if;
     end loop;
     return RetVal;  
   end function;
@@ -226,8 +215,8 @@ begin
       -- Must add d'48 to all numbers to align to ascii, hex numbers need
       -- special treatment.
       -- Each nibble of the data and address must be converted.
-      OutBuf((AddrStartOffs+1)*Byte-1 downto AddrEndOffs*Byte) := HexToAsc(RegAccessIn.Addr'length/Byte-1, 0, RegAccessIn.Addr);
-      OutBuf((DataStartOffs+1)*Byte-1 downto DataEndOffs*Byte) := HexToAsc(RegAccessIn.Data'length/Byte-1, 0, RegAccessIn.Data);
+      OutBuf((AddrStartOffs+1)*Byte-1 downto AddrEndOffs*Byte) := HexToAsc(RegAccessIn.Addr'length/Nibble-1, 0, RegAccessIn.Addr);
+      OutBuf((DataStartOffs+1)*Byte-1 downto DataEndOffs*Byte) := HexToAsc(RegAccessIn.Data'length/Nibble-1, 0, RegAccessIn.Data);
 
       OutBuf(Byte-1 downto 0) := NewLine;
 
