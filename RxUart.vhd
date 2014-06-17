@@ -7,7 +7,8 @@ use work.Types.all;
 
 entity SerialRx is
   generic (
-    DataW : positive
+    DataW   : positive;
+    ClkFreq : integer := 50000000
   );
   port (
     Clk   : in  bit1;
@@ -53,23 +54,31 @@ begin
     elsif rising_edge(Clk) then
       case Baud is
         when Baud_115200 =>
-          Divisor <= 25;
+          Divisor <= ClkFreq / 2000000;
+          
         when Baud_57600 =>
-          Divisor <= 53;
+          Divisor <= ClkFreq / 943396;
+          
         when Baud_38400 =>
-          Divisor <= 81;
+          Divisor <= ClkFreq / 617283;
+          
         when Baud_19200 =>
-          Divisor <= 165;
+          Divisor <= ClkFreq / 303030;
+          
         when Baud_9600 =>
-          Divisor <= 340;
+          Divisor <= ClkFreq / 147059;
+          
         when Baud_4800 =>
-          Divisor <= 670;
+          Divisor <= ClkFreq / 74627;
+          
         when Baud_2400 =>
-          Divisor <= 1342;
+          Divisor <= ClkFreq / 37258;
+                    
         when Baud_1200 =>
-          Divisor <= 2688;
+          Divisor <= ClkFreq / 18601;
+          
         when others =>
-          Divisor <= 25;
+          Divisor <= ClkFreq / 2000000;
       end case;
     end if;
   end process;
