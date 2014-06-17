@@ -7,7 +7,6 @@ use work.Types.all;
 
 entity SerialGen is
   generic (
-    Bitrate : positive := 9600;
     DataW   : positive := 8;
     ClkFreq : positive := 50000000
     );
