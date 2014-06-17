@@ -77,7 +77,7 @@ architecture rtl of SerialCmdParser is
       B := Inc_norm((j+1)*Byte-1 downto j*Byte);
       -- hex
       if B >= x"41" then
-        B := B - x"41";
+        B := B - x"37";
       else
         B := B - x"30";
       end if;
@@ -88,10 +88,10 @@ architecture rtl of SerialCmdParser is
   end function;
 
   function HexToAsc(StartOffs : natural; EndOffs : natural; Inc : word) return word is
-    variable j                : integer;
+    variable j           : integer;
     variable NibbleChunk : word(Nibble-1 downto 0);
-    variable RetVal           : word((Inc'length/Nibble)*Byte-1 downto 0);
-    variable Inc_norm         : word(Inc'length-1 downto 0);
+    variable RetVal      : word((Inc'length/Nibble)*Byte-1 downto 0);
+    variable Inc_norm    : word(Inc'length-1 downto 0);
   begin
     Inc_norm := Inc;
     
@@ -106,7 +106,7 @@ architecture rtl of SerialCmdParser is
       if NibbleChunk < 10 then
         RetVal((i+1)*Byte-1 downto i*Byte) := NibbleChunk + x"30";        
       else
-        RetVal((i+1)*Byte-1 downto i*Byte) := NibbleChunk + x"41";
+        RetVal((i+1)*Byte-1 downto i*Byte) := NibbleChunk + x"37";
       end if;        
     end loop;
     return RetVal;  
@@ -233,7 +233,5 @@ begin
       end if;
     end if;
   end process;
-
   OutSerChar <= OutBuf_D((conv_integer(OutBufLen_D)+1)*Byte-1 downto conv_integer(OutBufLen_D)*Byte);
-
 end architecture rtl;
