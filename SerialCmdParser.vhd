@@ -220,7 +220,7 @@ begin
 
       OutBuf(Byte-1 downto 0) := NewLine;
 
-      OutBufLen_N <= conv_word(BufLen-1, BufLenW);
+      OutBufLen_N <= conv_word(BufLen, BufLenW);
       OutBufVal_N <= '1';
       OutBuf_N    <= OutBuf;
     end if;
@@ -233,5 +233,5 @@ begin
       end if;
     end if;
   end process;
-  OutSerChar <= OutBuf_D((conv_integer(OutBufLen_D)+1)*Byte-1 downto conv_integer(OutBufLen_D)*Byte);
+  OutSerChar <= OutBuf_D((conv_integer(OutBufLen_D)+0)*Byte-1 downto (conv_integer(OutBufLen_D)-1)*Byte) when OutBufVal_D = '1' else (others => 'X');
 end architecture rtl;
