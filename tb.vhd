@@ -96,54 +96,54 @@ begin
      when "00101" =>
        TestData <= x"33";
 
-     when "00111" =>
+     when "00110" =>
        TestData <= x"34";
-
-     when "01000" =>
+       
+     when "00111" =>
        TestData <= x"35";
 
-     when "01001" =>
+     when "01000" =>
        TestData <= x"36";
 
-     when "01010" =>
+     when "01001" =>
        TestData <= x"37";
+
+     when "01010" =>
+       TestData <= Space;       
        
      when "01011" =>
-       TestData <= Space;       
-
-     when "01100" =>
        TestData <= x"38";
 
-     when "01101" =>
+     when "01100" =>
        TestData <= x"39";
 
+     when "01101" =>
+       TestData <= x"3A";
+
      when "01110" =>
-       TestData <= x"40";
+       TestData <= x"3B";
 
      when "01111" =>
-       TestData <= x"41";
+       TestData <= x"3C";
 
      when "10000" =>
-       TestData <= x"42";
+       TestData <= x"3D";
        
      when "10001" =>
-       TestData <= x"43";
+       TestData <= x"3E";
 
      when "10010" =>
-       TestData <= x"44";
+       TestData <= x"3F";
 
      when "10011" =>
-       TestData <= x"45";
-       
-     when "10100" =>
        TestData <= NewLine;
-
+       
      when others =>
        TestData    <= x"FF";
        TestDataVal <= '0';
    end case;
    
-   if Busy <= '0' and DataPtr_D /= x"FF" then
+   if Busy <= '0' and DataPtr_D /= "11111" then
      DataPtr_N <= DataPtr_D + 1;
    end if;
   end process;
