@@ -22,6 +22,7 @@ entity SerialTestTop is
 end entity;
 
 architecture fpga of SerialTestTop is
+  signal HalfClk                            : bit1;
   signal Rst_N                              : bit1;
   signal We                                 : bit1;
   signal DataToParser, DataFromParser       : word(8-1 downto 0);
@@ -49,6 +50,16 @@ begin
     end if;
   end process;
 
+  ClkDiv : process (Rst_N, Clk)
+  begin
+    if Rst_N = '0' then
+      HalfClk <= '0';
+    elsif rising_edge(Clk) then
+      HalfClk <= not HalfClk;
+    end if;
+  end process;
+--  HalfClk <= Clk;
+
   Async : process (Cnt_D, WData_D)
   begin
     Cnt_N   <= Cnt_D + 1;
@@ -63,7 +74,7 @@ begin
       end if;
     end if;
     
-    if conv_integer(Cnt_D + 1) = 50000000 then
+    if conv_integer(Cnt_D + 1) = 25000000 then
       Cnt_N <= (others => '0');
     end if;
   end process;
@@ -73,14 +84,14 @@ begin
   RstSync : entity work.ResetSync
     port map (
       AsyncRst => AsyncRstN,
-      Clk      => Clk,
+      Clk      => HalfClk,
       --
       Rst_N    => Rst_N
       );
 
   ButtonPulse0 : entity work.ButtonPulse
     port map (
-      Clk         => Clk,
+      Clk         => HalfClk,
       RstN        => Rst_N,
       --
       Button      => Button0,
@@ -91,8 +102,11 @@ begin
   Baud <= "010";
   
   SerialWrite : entity work.SerialGen
+    generic map (
+      ClkFreq => 25000000
+      )
     port map (
-      Clk       => Clk,
+      Clk       => HalfClk,
       Rst_N     => Rst_N,
       --
       Baud      => Baud,
@@ -106,10 +120,11 @@ begin
 
   SerialRead : entity work.SerialRx
     generic map (
-      DataW => 8
+      DataW   => 8,
+      ClkFreq => 25000000
       )
     port map (
-      Clk   => Clk,
+      Clk   => HalfClk,
       RstN  => Rst_N,
       --
       Rx    => SerialIn,
@@ -123,7 +138,7 @@ begin
   CmdParser : entity work.SerialCmdParser
     port map (
       RstN           => Rst_N,
-      Clk            => Clk,
+      Clk            => HalfClk,
       --
       IncSerChar     => DataToParser,
       IncSerCharVal  => DataToParserVal,
