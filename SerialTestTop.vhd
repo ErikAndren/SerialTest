@@ -36,25 +36,23 @@ architecture fpga of SerialTestTop is
   signal Led                                : word(2-1 downto 0);
   signal Busy                               : bit1;
 begin
-  Led0 <= Led(0);
-  Led1 <= Led(1);
+  Led0 <= WData_D(0);
+  Led1 <= WData_D(1);
   
-  Sync : process (Clk, Rst_N)
+  Sync : process (HalfClk, Rst_N)
   begin
     if Rst_N = '0' then
       Cnt_D   <= (others => '0');
       WData_D <= x"30";
-    elsif rising_edge(Clk) then
+    elsif rising_edge(HalfClk) then
       Cnt_D   <= Cnt_N;
       WData_D <= WData_N;
     end if;
   end process;
 
-  ClkDiv : process (Rst_N, Clk)
+  ClkDiv : process (Clk)
   begin
-    if Rst_N = '0' then
-      HalfClk <= '0';
-    elsif rising_edge(Clk) then
+    if rising_edge(Clk) then
       HalfClk <= not HalfClk;
     end if;
   end process;
@@ -113,6 +111,8 @@ begin
       --
       We        => DataFromParserVal,
       WData     => DataFromParser,
+--      We        => We,
+--      WData     => WData_D,
       --
       SerialOut => SerialOut,
       Busy      => Busy
